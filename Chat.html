@@ -1,31 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-	<title>Demo Booth - Embedded Service</title>
-	<style type='text/css'>
-		.embeddedServiceHelpButton .helpButton .uiButton {
-			background-color: #005290;
-			font-family: "Arial", sans-serif;
-		}
-		.embeddedServiceHelpButton .helpButton .uiButton:focus {
-			outline: 1px solid #005290;
-		}
-	</style>
-</head>
-<body>
-
-	<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
-	<script type='text/javascript'>
+<html>
+    <body>
+<script type='text/javascript'>
 	function initEmbeddedMessaging() {
 		try {
 			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
 			embeddedservice_bootstrap.init(
 				'00DIc000000IGan',
-				'SDO_Messaging_for_Web',
-				'https://trailsignup-19162158f5bbf9.my.site.com/ESWSDOMessagingforWeb1767874031149',
+				'Partner_Demo_Booth',
+				'https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316',
 				{
 					scrt2URL: 'https://trailsignup-19162158f5bbf9.my.salesforce-scrt.com'
 				}
@@ -35,7 +18,31 @@
 		}
 	};
 </script>
-<script type='text/javascript' src='https://trailsignup-19162158f5bbf9.my.site.com/ESWSDOMessagingforWeb1767874031149/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+<script type='text/javascript' src='https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
+<button id="launchChatButton" onclick="launchChat()">Click to contact support</button>
+
+
+<script>
+    function launchChat() {
+        embeddedservice_bootstrap.utilAPI.launchChat()
+            .then(() => {
+                // Success handler used to perform actions
+                // when the chat client launches successfully.
+                // For example, create a method that disables the launch chat button.
+                alert("Success");
+            }).catch(() => {
+                // Error handler used to perform actions
+                // if the chat client fails to launch.
+                // For example, create a method that hides the launch chat button.
+               alert("Success");
+            }).finally(() => {
+                // Finally handler used to perform any clean-up actions
+                // regardless of whether the chat client launches successfully or not.
+                // For example, create a method that logs the user’s attempt to chat.
+                alert("Success");
+            });
+    }
+</script>
 </body>
 </html>
