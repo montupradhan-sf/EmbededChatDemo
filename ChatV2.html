@@ -109,6 +109,7 @@
 <script type='text/javascript'>
 	function initEmbeddedMessaging() {
 		try {
+			debugger;
 			embeddedservice_bootstrap.settings.language = 'en_US';
             window.embeddedservice_bootstrap.settings.displayMode = 'inline';
                    window.embedded_svc.settings.displayHelpButton = false;
@@ -133,6 +134,7 @@
     const chatUI = document.getElementById('chat-container');
 
     function switchToChat() {
+		debugger;
         // Hide Search, Show Chat
         searchUI.style.display = 'none';
         chatUI.style.display = 'flex';
