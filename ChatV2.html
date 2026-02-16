@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Enhanced Chat Inline Swap</title>
+    <style>
+        body {
+            font-family: 'Salesforce Sans', system-ui, sans-serif;
+            background-color: #f3f3f3;
+            display: flex;
+            justify-content: center;
+            padding-top: 100px;
+        }
+
+        /* Container for the UI */
+        .interaction-box {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* 1. Search Bar State */
+        #search-container {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #dddbda;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #0176d3;
+        }
+
+        /* 2. Chat State (Hidden by default) */
+        #chat-container {
+            display: none; 
+            height: 550px;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: #0176d3;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Salesforce container takes full remaining height */
+        #embedded_svc_container {
+            flex-grow: 1;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="interaction-box">
+    
+    <div id="search-container">
+        <h2 style="margin-top:0; color: #16325c;">How can we help?</h2>
+        <input type="text" 
+               class="search-input" 
+               placeholder="Click here to start a chat..." 
+               onfocus="switchToChat()">
+    </div>
+
+    <div id="chat-container">
+        <div class="chat-header">
+            <span>Support Assistant</span>
+            <button class="back-btn" onclick="switchToSearch()">← Back to Search</button>
+        </div>
+        <div id="embedded_svc_container">
+            </div>
+    </div>
+
+</div>
+
+
+
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US';
+            const myElement = document.querySelector('#embedded_svc_container');
+            embeddedservice_bootstrap.settings.targetElement = myElement;
+            embeddedservice_bootstrap.settings.displayMode = 'inline';
+			embeddedservice_bootstrap.init(
+				'00DIc000000IGan',
+				'Partner_Demo_Booth',
+				'https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316',
+				{
+					scrt2URL: 'https://trailsignup-19162158f5bbf9.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316/assets/js/bootstrap.min.js'>
+window.onload = function() {
+  initEmbeddedMessaging();
+};
+</script>
+
+<script>
+    const searchUI = document.getElementById('search-container');
+    const chatUI = document.getElementById('chat-container');
+
+    function switchToChat() {
+        // Hide Search, Show Chat
+        searchUI.style.display = 'none';
+        chatUI.style.display = 'flex';
+        
+        // Optional: Log to console for debugging
+        console.log("Search hidden. Initializing Salesforce Enhanced Messaging...");
+    }
+
+    function switchToSearch() {
+        // Hide Chat, Show Search
+        chatUI.style.display = 'none';
+        searchUI.style.display = 'block';
+    }
+
+    //initEmbeddedMessaging();
+
+    /* SALESFORCE V2 NOTE:
+       When you paste your snippet below, ensure:
+       embedded_svc.settings.displayHelpButton = false;
+       embedded_svc.settings.targetElement = document.getElementById('embedded_svc_container');
+    */
+</script>
+
+
+
+
+</body>
+</html>
