@@ -1,120 +1,118 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salesforce Enhanced Chat Inline Swap</title>
-    <style>
-        body {
-            font-family: 'Salesforce Sans', system-ui, sans-serif;
-            background-color: #f3f3f3;
-            display: flex;
-            justify-content: center;
-            padding-top: 100px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Input Example</title>
 
-        /* Container for the UI */
-        .interaction-box {
-            width: 100%;
-            max-width: 500px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f8fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-        /* 1. Search Bar State */
-        #search-container {
-            padding: 40px;
-            text-align: center;
-        }
+    .chat-container {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      width: 400px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
 
-        .search-input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #dddbda;
-            border-radius: 4px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+    .chat-input-area {
+      display: flex;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 8px 12px;
+      background: #f1f1f1;
+    }
 
-        .search-input:focus {
-            border-color: #0176d3;
-        }
+    .chat-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 16px;
+      padding: 6px;
+    }
 
-        /* 2. Chat State (Hidden by default) */
-        #chat-container {
-            display: none; 
-            height: 550px;
-            flex-direction: column;
-        }
+    .send-button {
+      background-color: #0078ff;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
 
-        .chat-header {
-            background: #0176d3;
-            color: white;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-        }
+    .send-button:hover {
+      background-color: #005fd1;
+    }
 
-        .back-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
+    /* --- CSS for Styling the Button --- */
+    .send-message-button {
+      /* Background and Dimensions */
+      background-color: #00008b; /* A deep blue, similar to the image */
+      color: white; /* White text */
+      padding: 15px 30px; /* Padding for height and width */
+      font-size: 18px; /* Readable text size */
+      font-weight: bold;
+      cursor: pointer; /* Changes mouse to a pointer on hover */
+      border: none; /* Remove default button border */
+      display: inline-block; /* Allows setting padding/margin */
+      text-align: center;
+      border-radius: 5px; /* Slight rounding of corners */
+  
+      /* The White Border/Outline Effect */
+      box-shadow: 0 0 0 2px white; /* A 2px white "stroke" */
+      outline: 2px solid #00008b; /* Helps create the gap/depth effect */
+    }
+  
+    .send-message-button:hover {
+      background-color: #0000a0; /* Slightly lighter blue on hover */
+    }
+  </style>
 
-        .back-btn:hover { background: rgba(255,255,255,0.3); }
+  <script type="text/javascript">
+    function initEmbeddedMessaging() {
+      try {
+        embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
-        /* Salesforce container takes full remaining height */
-        #embedded_svc_container {
-            flex-grow: 1;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
+        // Hiding Chat Button on page load
+        embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
 
-<div class="interaction-box">
-    
-    <div id="search-container">
-        <h2 style="margin-top:0; color: #16325c;">How can we help?</h2>
-        <input type="text" 
-               class="search-input" 
-               placeholder="Click here to start a chat..." 
-               onfocus="switchToChat()">
-    </div>
+        /* START:: Conversation Opened Listener */
+        window.addEventListener("onEmbeddedMessagingConversationOpened", (event) => {
+          hideChatContainer();
+        });
+        /* END:: Conversation Opened Listener */
 
-    <div id="chat-container">
-        <div class="chat-header">
-            <span>Support Assistant</span>
-            <button class="back-btn" onclick="switchToSearch()">← Back to Search</button>
-        </div>
-        <div id="embedded_svc_container">
-            </div>
-    </div>
+        /* START:: Conversation Closed Listener */
+        window.addEventListener("onEmbeddedMessagingWindowClosed", (event) => {
+          showChatContainer();
+        });
+        /* END:: Conversation Closed Listener */
 
-</div>
+        /* START:: Button Created Listener */
+        window.addEventListener("onEmbeddedMessagingButtonCreated", (event) => {
+          showChatContainer();
+        });
+        /* END:: Button Created Listener */
 
-<script type='text/javascript' src='https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316/assets/js/bootstrap.min.js'>
-</script>
-
-<script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		try {
-			debugger;
-			embeddedservice_bootstrap.settings.language = 'en_US';
-            window.embeddedservice_bootstrap.settings.displayMode = 'inline';
-                   window.embedded_svc.settings.displayHelpButton = false;
-       window.embedded_svc.settings.targetElement = document.getElementById('embedded_svc_container');
-			window.embeddedservice_bootstrap.init(
+        embeddedservice_bootstrap.init(
 				'00DIc000000IGan',
 				'Partner_Demo_Booth',
 				'https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316',
@@ -122,44 +120,137 @@
 					scrt2URL: 'https://trailsignup-19162158f5bbf9.my.salesforce-scrt.com'
 				}
 			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
-</script>
+      } catch (err) {
+        console.error('Error loading Embedded Messaging: ', err);
+      }
+    }
+  </script>
 
+  <script 
+    type="text/javascript" 
+    src='https://trailsignup-19162158f5bbf9.my.site.com/ESWPartnerDemoBooth1770864371316/assets/js/bootstrap.min.js'
+    onload="initEmbeddedMessaging()">
+  </script>
+</head>
 
-<script>
-    const searchUI = document.getElementById('search-container');
-    const chatUI = document.getElementById('chat-container');
+<body>
+  <div class="chat-container">
+    <div>
+      Welcome to our Chat!!!
+      <br /><br /><br />
+    </div>
 
-    function switchToChat() {
-		debugger;
-        // Hide Search, Show Chat
-        searchUI.style.display = 'none';
-        chatUI.style.display = 'flex';
-		 initEmbeddedMessaging();
-        
-        // Optional: Log to console for debugging
-        console.log("Search hidden. Initializing Salesforce Enhanced Messaging...");
+    <div class="chat-input-area">
+      <input 
+        type="text" 
+        id="chatInput" 
+        class="chat-input" 
+        placeholder="Type a message..." 
+      />
+      <button class="send-button" id="sendBtn">➤</button>
+    </div>
+
+    <div>
+      <br/><br/>
+      <button class="send-message-button" id="orderButton">
+        Need help with my Order
+      </button>
+      <br/><br/>
+      <button class="send-message-button" id="caseButton">
+        Need help with my Case
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function showChatContainer() {
+      const chatContainer = document.querySelector('.chat-container');
+      chatContainer.style.display = 'block';
     }
 
-    function switchToSearch() {
-        // Hide Chat, Show Search
-        chatUI.style.display = 'none';
-        searchUI.style.display = 'block';
+    function hideChatContainer() {
+      const chatContainer = document.querySelector('.chat-container');
+      chatContainer.style.display = 'none';
     }
 
-      initEmbeddedMessaging();
+    function launchChat() {
+      embeddedservice_bootstrap.utilAPI.launchChat()
+          .then(() => {
+            console.log('Successfully launched Messaging');
+          })
+          .catch(() => {
+            console.log('Some error occurred when launching Messaging');
+          })
+          .finally(() => {
+            console.log('Successfully launched Messaging - Finally');
+          });
+    }
 
-    /* SALESFORCE V2 NOTE:
-       When you paste your snippet below, ensure:*/
+    function sendMessageToChat(message) {
+      setTimeout(() => {
+          embeddedservice_bootstrap.utilAPI.sendTextMessage(message)
+            .then(() => {
+              console.log("Message sent");
+            })
+            .catch(() => {
+              console.log("Message not sent");
+            })
+            .finally(() => {
+              console.log("Message sent - finally");
+            });
+        }, 3000);
+    }
 
-    
-</script>
+    const sendBtn = document.getElementById('sendBtn');
+    const chatInput = document.getElementById('chatInput');
 
+    sendBtn.addEventListener('click', () => {
+      const message = chatInput.value.trim();
+      if (message) {
+        console.log(message);
+        chatInput.value = '';
+        hideChatContainer();
 
+        launchChat();
 
+        sendMessageToChat(message);
+      } else {
+        alert("Please enter a message first!");
+      }
+    });
 
+    // Allow pressing Enter to send the message
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendBtn.click();
+      }
+    });
+
+    // Get the button element using its ID
+    const orderButton = document.getElementById('orderButton');
+    // Add an event listener that runs a function when the button is clicked
+    orderButton.addEventListener('click', function() {
+      // Get the text content of the button
+      const orderButtonText = orderButton.textContent.trim();
+      
+      // Display the text in the browser's console
+      console.log(orderButtonText);
+      launchChat();
+      sendMessageToChat(orderButtonText);
+    });
+
+    // Get the button element using its ID
+    const caseButton = document.getElementById('caseButton');
+    // Add an event listener that runs a function when the button is clicked
+    caseButton.addEventListener('click', function() {
+      // Get the text content of the button
+      const caseButtonText = caseButton.textContent.trim();
+      
+      // Display the text in the browser's console
+      console.log(caseButtonText);
+      launchChat();
+      sendMessageToChat(caseButtonText);
+    });
+  </script>
 </body>
 </html>
